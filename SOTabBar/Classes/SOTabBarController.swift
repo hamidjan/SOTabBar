@@ -12,10 +12,15 @@ public protocol SOTabBarControllerDelegate: NSObjectProtocol {
     func tabBarController(_ tabBarController: SOTabBarController, didSelect viewController: UIViewController)
 }
 
+public protocol SOTabBarControllerDataSource: NSObjectProtocol {
+    func getSelectedIndex() -> Int
+}
+
 @available(iOS 10.0, *)
 open class SOTabBarController: UIViewController, SOTabBarDelegate {
     
     weak open var delegate: SOTabBarControllerDelegate?
+    weak open var dataSource: SOTabBarControllerDataSource?
     
     public var selectedIndex: Int = 0
     public var previousSelectedIndex = 0
@@ -29,6 +34,7 @@ open class SOTabBarController: UIViewController, SOTabBarDelegate {
     private lazy var tabBar: SOTabBar = {
         let tabBar = SOTabBar()
         tabBar.delegate = self
+        tabBar.dataSource = self
         tabBar.translatesAutoresizingMaskIntoConstraints = false
         return tabBar
     }()
@@ -93,4 +99,11 @@ open class SOTabBarController: UIViewController, SOTabBarDelegate {
         
     }
     
+}
+
+@available(iOS 10.0, *)
+extension SOTabBarController: SOTabBarDataSource {
+    public func getIndex() -> Int {
+        return self.dataSource?.getSelectedIndex() ?? 0
+    }
 }

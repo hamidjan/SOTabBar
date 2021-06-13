@@ -21,6 +21,7 @@ class ViewController: SOTabBarController {
         super.viewDidLoad()
         
         self.delegate = self
+        self.dataSource = self
         let homeStoryboard = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HOME_ID")
         let chatStoryboard = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CHAT_ID")
         let sleepStoryboard = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SLEEP_ID")
@@ -41,5 +42,11 @@ class ViewController: SOTabBarController {
 extension ViewController: SOTabBarControllerDelegate {
     func tabBarController(_ tabBarController: SOTabBarController, didSelect viewController: UIViewController) {
         print(viewController.tabBarItem.title ?? "")
+    }
+}
+
+extension ViewController: SOTabBarControllerDataSource {
+    func getSelectedIndex() -> Int {
+        return 2
     }
 }

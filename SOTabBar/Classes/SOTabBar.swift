@@ -14,6 +14,10 @@ protocol SOTabBarDelegate: AnyObject {
      func tabBar(_ tabBar: SOTabBar, didSelectTabAt index: Int)
 }
 
+public protocol SOTabBarDataSource: NSObjectProtocol {
+    func getIndex() -> Int
+}
+
 @available(iOS 10.0, *)
 public class SOTabBar: UIView {
     
@@ -23,7 +27,7 @@ public class SOTabBar: UIView {
             guard !viewControllers.isEmpty else { return }
             drawConstraint()
             layoutIfNeeded()
-            didSelectTab(index: 0)
+            didSelectTab(index: self.dataSource?.getIndex() ?? 0)
         }
     }
     
@@ -58,6 +62,7 @@ public class SOTabBar: UIView {
     }()
     
     weak var delegate: SOTabBarDelegate?
+    weak var dataSource: SOTabBarDataSource?
     
     private var selectedIndex: Int = 0
     private var previousSelectedIndex = 0

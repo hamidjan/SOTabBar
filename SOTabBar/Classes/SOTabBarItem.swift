@@ -17,7 +17,7 @@ class SOTabBarItem: UIView {
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = self.title
-        lbl.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
+        lbl.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.semibold)
         lbl.textColor = UIColor.darkGray
         lbl.textAlignment = .center
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +51,7 @@ class SOTabBarItem: UIView {
             titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: SOTabBarSetting.tabBarHeight),
             titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 26)
+            titleLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -64,7 +64,7 @@ class SOTabBarItem: UIView {
         titleLabel.alpha = 0
         UIView.animate(withDuration: SOTabBarSetting.tabBarAnimationDurationTime) { [weak self] in
             self?.titleLabel.alpha = 1
-            self?.titleLabel.frame.origin.y = SOTabBarSetting.tabBarHeight / 1.8
+            self?.titleLabel.frame.origin.y = SOTabBarSetting.tabBarHeight / 2.0
             self?.tabImageView.frame.origin.y = -5
             self?.tabImageView.alpha = 0
         }

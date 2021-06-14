@@ -136,12 +136,18 @@ public class SOTabBar: UIView {
             return
         }
         let index = Int(floor(touchArea / tabWidth))
-        didSelectTab(index: index)
+        
+//        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+//            let rtlIndex = (viewControllers.count - 1) - index
+//            didSelectTab(index: rtlIndex)
+//        } else {
+            didSelectTab(index: index)
+//        }
     }
     
     private func didSelectTab(index: Int) {
         if index + 1 == selectedIndex {return}
-        animateTitle(index: index)
+//        animateTitle(index: index)
  
         previousSelectedIndex = selectedIndex
         selectedIndex  = index + 1
@@ -150,10 +156,20 @@ public class SOTabBar: UIView {
         animateCircle(with: circlePath)
         animateImage()
         
-        guard let image = self.viewControllers[index].tabBarItem.selectedImage else {
-            fatalError("You should insert selected image to all View Controllers")
+        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+            let rtlIndex = (viewControllers.count - 1) - index
+            animateTitle(index: rtlIndex)
+            guard let image = self.viewControllers[rtlIndex].tabBarItem.selectedImage else {
+                fatalError("You should insert selected image to all View Controllers")
+            }
+            self.tabSelectedImageView.image = image
+        } else {
+            animateTitle(index: index)
+            guard let image = self.viewControllers[index].tabBarItem.selectedImage else {
+                fatalError("You should insert selected image to all View Controllers")
+            }
+            self.tabSelectedImageView.image = image
         }
-        self.tabSelectedImageView.image = image
     }
     
     private func animateTitle(index: Int) {

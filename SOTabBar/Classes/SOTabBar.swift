@@ -147,24 +147,24 @@ public class SOTabBar: UIView {
     
     private func didSelectTab(index: Int) {
         if index + 1 == selectedIndex {return}
-//        animateTitle(index: index)
  
         previousSelectedIndex = selectedIndex
         selectedIndex  = index + 1
         
-        delegate?.tabBar(self, didSelectTabAt: index)
         animateCircle(with: circlePath)
         animateImage()
         
         if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
             let rtlIndex = (viewControllers.count - 1) - index
             animateTitle(index: rtlIndex)
+            delegate?.tabBar(self, didSelectTabAt: rtlIndex)
             guard let image = self.viewControllers[rtlIndex].tabBarItem.selectedImage else {
                 fatalError("You should insert selected image to all View Controllers")
             }
             self.tabSelectedImageView.image = image
         } else {
             animateTitle(index: index)
+            delegate?.tabBar(self, didSelectTabAt: index)
             guard let image = self.viewControllers[index].tabBarItem.selectedImage else {
                 fatalError("You should insert selected image to all View Controllers")
             }

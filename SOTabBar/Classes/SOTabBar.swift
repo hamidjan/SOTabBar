@@ -14,8 +14,9 @@ protocol SOTabBarDelegate: AnyObject {
      func tabBar(_ tabBar: SOTabBar, didSelectTabAt index: Int)
 }
 
-public protocol SOTabBarDataSource: NSObjectProtocol {
+protocol SOTabBarDataSource: NSObjectProtocol {
     func getIndex() -> Int
+    func isRTL() -> Bool
 }
 
 @available(iOS 10.0, *)
@@ -136,13 +137,7 @@ public class SOTabBar: UIView {
             return
         }
         let index = Int(floor(touchArea / tabWidth))
-        
-//        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
-//            let rtlIndex = (viewControllers.count - 1) - index
-//            didSelectTab(index: rtlIndex)
-//        } else {
-            didSelectTab(index: index)
-//        }
+        didSelectTab(index: index)
     }
     
     private func didSelectTab(index: Int) {
@@ -154,7 +149,7 @@ public class SOTabBar: UIView {
         animateCircle(with: circlePath)
         animateImage()
         
-        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+        if self.dataSource?.isRTL() ?? false {
             let rtlIndex = (viewControllers.count - 1) - index
             animateTitle(index: rtlIndex)
             delegate?.tabBar(self, didSelectTabAt: rtlIndex)

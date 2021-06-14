@@ -49,4 +49,8 @@ extension ViewController: SOTabBarControllerDataSource {
     func getSelectedIndex() -> Int {
         return 2
     }
+    
+    func isLangRTL() -> Bool {
+        return false
+    }
 }

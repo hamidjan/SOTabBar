@@ -14,6 +14,7 @@ public protocol SOTabBarControllerDelegate: NSObjectProtocol {
 
 public protocol SOTabBarControllerDataSource: NSObjectProtocol {
     func getSelectedIndex() -> Int
+    func isLangRTL() -> Bool
 }
 
 @available(iOS 10.0, *)
@@ -103,7 +104,11 @@ open class SOTabBarController: UIViewController, SOTabBarDelegate {
 
 @available(iOS 10.0, *)
 extension SOTabBarController: SOTabBarDataSource {
-    public func getIndex() -> Int {
+    func getIndex() -> Int {
         return self.dataSource?.getSelectedIndex() ?? 0
+    }
+    
+    func isRTL() -> Bool {
+        return self.dataSource?.isLangRTL() ?? false
     }
 }

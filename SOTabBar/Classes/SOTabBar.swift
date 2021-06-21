@@ -257,8 +257,21 @@ extension SOTabBar {
             return
         }
         
-        self.badgeLabel.alpha = 1
-        self.badgeLabel.text = badge
+        self.badgeLabel.alpha = 0
+        self.badgeLabel.text = ""
+        if self.dataSource?.isRTL() ?? false {
+            let rtlIndex = (viewControllers.count - 1) - selectedIndex
+            if rtlIndex == index {
+                self.badgeLabel.alpha = 1
+                self.badgeLabel.text = badge
+            }
+        } else {
+            if index == selectedIndex {
+                self.badgeLabel.alpha = 1
+                self.badgeLabel.text = badge
+            }
+        }
+
         (self.stackView.viewWithTag(index + 1) as? SOTabBarItem)?.badge = value
     }
 }

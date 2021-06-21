@@ -177,14 +177,6 @@ open class SOTabBar: UIView {
             }
             self.tabSelectedImageView.image = image
             self.animateBadge(index: rtlIndex)
-            /*guard let badge = self.viewControllers[rtlIndex].tabBarItem.badgeValue,
-                  badge.count > 0 else {
-                self.badgeLabel.text = ""
-                self.badgeLabel.alpha = 0
-                return
-            }
-            self.badgeLabel.alpha = 1
-            self.badgeLabel.text = badge*/
         } else {
             animateTitle(index: index)
             delegate?.tabBar(self, didSelectTabAt: index)
@@ -194,14 +186,6 @@ open class SOTabBar: UIView {
             self.tabSelectedImageView.image = image
             
             self.animateBadge(index: index)
-            /*guard let badge = self.viewControllers[index].tabBarItem.badgeValue,
-                  badge.count > 0 else {
-                self.badgeLabel.text = ""
-                self.badgeLabel.alpha = 0
-                return
-            }
-            self.badgeLabel.alpha = 1
-            self.badgeLabel.text = badge*/
         }
     }
     
@@ -264,24 +248,12 @@ private extension SOTabBar {
 @available(iOS 10.0, *)
 extension SOTabBar {
     open func updateBadge(index: Int, value: String?) {
-        if self.dataSource?.isRTL() ?? false {
-            let rtlIndex = (viewControllers.count - 1) - index
-            
-            self.viewControllers[rtlIndex].tabBarItem.badgeValue = value
-            guard let badge = self.viewControllers[rtlIndex].tabBarItem.badgeValue,
-                  badge.count > 0 else {
-                self.badgeLabel.text = ""
-                self.badgeLabel.alpha = 0
-                return
-            }
-        } else {
-            self.viewControllers[index].tabBarItem.badgeValue = value
-            guard let badge = self.viewControllers[index].tabBarItem.badgeValue,
-                  badge.count > 0 else {
-                self.badgeLabel.text = ""
-                self.badgeLabel.alpha = 0
-                return
-            }
+        self.viewControllers[index].tabBarItem.badgeValue = value
+        guard let badge = self.viewControllers[index].tabBarItem.badgeValue,
+              badge.count > 0 else {
+            self.badgeLabel.text = ""
+            self.badgeLabel.alpha = 0
+            return
         }
         
         (self.stackView.viewWithTag(index + 1) as? SOTabBarItem)?.badge = value

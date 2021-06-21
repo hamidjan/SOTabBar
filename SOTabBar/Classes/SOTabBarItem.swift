@@ -13,6 +13,25 @@ class SOTabBarItem: UIView {
     
     let image: UIImage
     let title: String
+    var badge: String? {
+        didSet {
+            self.badgeLabel.text = badge
+            badgeLabel.alpha = self.badge?.count ?? 0 > 0 ? 1 : 0
+        }
+    }
+    
+    private lazy var badgeLabel: UILabel = {
+        let lbl = UILabel()
+//        lbl.text = self.badge
+        lbl.font = UIFont.systemFont(ofSize: 11, weight: .bold)
+        lbl.textColor = SOTabBarSetting.tabBarTintColor
+        lbl.textAlignment = .center
+        lbl.backgroundColor = .black
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.layer.masksToBounds = true
+        lbl.layer.cornerRadius = SOTabBarSetting.tabBarBadgeSize / 2.0
+        return lbl
+    }()
     
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
@@ -36,6 +55,7 @@ class SOTabBarItem: UIView {
         }
         self.image = selecteImage
         self.title = item.title ?? ""
+        self.badge = item.badgeValue ?? ""
         super.init(frame: .zero)
         drawConstraints()
     }
@@ -43,6 +63,7 @@ class SOTabBarItem: UIView {
     private func drawConstraints() {
         self.addSubview(titleLabel)
         self.addSubview(tabImageView)
+        self.addSubview(badgeLabel)
         NSLayoutConstraint.activate([
             tabImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             tabImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -51,7 +72,12 @@ class SOTabBarItem: UIView {
             titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: SOTabBarSetting.tabBarHeight),
             titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 20)
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            badgeLabel.centerYAnchor.constraint(equalTo: tabImageView.topAnchor),
+            badgeLabel.centerXAnchor.constraint(equalTo: tabImageView.trailingAnchor),
+            badgeLabel.heightAnchor.constraint(equalToConstant: SOTabBarSetting.tabBarBadgeSize),
+            badgeLabel.widthAnchor.constraint(equalToConstant: SOTabBarSetting.tabBarBadgeSize)
         ])
     }
     
@@ -62,6 +88,7 @@ class SOTabBarItem: UIView {
    internal func animateTabSelected() {
         tabImageView.alpha = 1
         titleLabel.alpha = 0
+        badgeLabel.alpha = 0
         UIView.animate(withDuration: SOTabBarSetting.tabBarAnimationDurationTime) { [weak self] in
             self?.titleLabel.alpha = 1
             self?.titleLabel.frame.origin.y = SOTabBarSetting.tabBarHeight / 2.0
@@ -72,6 +99,7 @@ class SOTabBarItem: UIView {
     
     internal func animateTabDeSelect() {
         tabImageView.alpha = 1
+        badgeLabel.alpha = self.badge?.count ?? 0 > 0 ? 1 : 0
         UIView.animate(withDuration: SOTabBarSetting.tabBarAnimationDurationTime) { [weak self] in
             self?.titleLabel.frame.origin.y = SOTabBarSetting.tabBarHeight
             self?.tabImageView.frame.origin.y = (SOTabBarSetting.tabBarHeight / 2) - CGFloat(SOTabBarSetting.tabBarSizeImage / 2)

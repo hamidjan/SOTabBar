@@ -20,7 +20,7 @@ protocol SOTabBarDataSource: NSObjectProtocol {
 }
 
 @available(iOS 10.0, *)
-public class SOTabBar: UIView {
+open class SOTabBar: UIView {
     
    internal var viewControllers = [UIViewController]() {
         didSet {
@@ -62,6 +62,18 @@ public class SOTabBar: UIView {
         return imageView
     }()
     
+    private lazy var badgeLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.font = UIFont.systemFont(ofSize: 11, weight: .bold)
+        lbl.textColor = SOTabBarSetting.tabBarTintColor
+        lbl.textAlignment = .center
+        lbl.backgroundColor = .black
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.layer.masksToBounds = true
+        lbl.layer.cornerRadius = SOTabBarSetting.tabBarBadgeSize / 2.0
+        return lbl
+    }()
+    
     weak var delegate: SOTabBarDelegate?
     weak var dataSource: SOTabBarDataSource?
     
@@ -92,6 +104,7 @@ public class SOTabBar: UIView {
             barView.heightAnchor.constraint(equalToConstant: SOTabBarSetting.tabBarHeight).isActive = true
             barView.translatesAutoresizingMaskIntoConstraints = false
             barView.isUserInteractionEnabled = false
+            barView.tag = vc.tabBarItem.tag
             self.stackView.addArrangedSubview(barView)
         }
     }
@@ -102,6 +115,7 @@ public class SOTabBar: UIView {
       
         innerCircleView.addSubview(outerCircleView)
         outerCircleView.addSubview(tabSelectedImageView)
+        outerCircleView.addSubview(badgeLabel)
         
         innerCircleView.frame.size = SOTabBarSetting.tabBarCircleSize
         innerCircleView.layer.cornerRadius = SOTabBarSetting.tabBarCircleSize.width / 2
@@ -121,7 +135,12 @@ public class SOTabBar: UIView {
             tabSelectedImageView.widthAnchor.constraint(equalToConstant: SOTabBarSetting.tabBarSizeSelectedImage),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            stackView.topAnchor.constraint(equalTo: self.topAnchor)
+            stackView.topAnchor.constraint(equalTo: self.topAnchor),
+            
+            badgeLabel.centerYAnchor.constraint(equalTo: outerCircleView.bottomAnchor, constant: -8),
+            badgeLabel.centerXAnchor.constraint(equalTo: outerCircleView.trailingAnchor, constant: -8),
+            badgeLabel.heightAnchor.constraint(equalToConstant: SOTabBarSetting.tabBarBadgeSize),
+            badgeLabel.widthAnchor.constraint(equalToConstant: SOTabBarSetting.tabBarBadgeSize)
         ]
         if #available(iOS 11.0, *) {
             constraints.append(stackView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor))
@@ -157,6 +176,15 @@ public class SOTabBar: UIView {
                 fatalError("You should insert selected image to all View Controllers")
             }
             self.tabSelectedImageView.image = image
+            self.animateBadge(index: rtlIndex)
+            /*guard let badge = self.viewControllers[rtlIndex].tabBarItem.badgeValue,
+                  badge.count > 0 else {
+                self.badgeLabel.text = ""
+                self.badgeLabel.alpha = 0
+                return
+            }
+            self.badgeLabel.alpha = 1
+            self.badgeLabel.text = badge*/
         } else {
             animateTitle(index: index)
             delegate?.tabBar(self, didSelectTabAt: index)
@@ -164,6 +192,29 @@ public class SOTabBar: UIView {
                 fatalError("You should insert selected image to all View Controllers")
             }
             self.tabSelectedImageView.image = image
+            
+            self.animateBadge(index: index)
+            /*guard let badge = self.viewControllers[index].tabBarItem.badgeValue,
+                  badge.count > 0 else {
+                self.badgeLabel.text = ""
+                self.badgeLabel.alpha = 0
+                return
+            }
+            self.badgeLabel.alpha = 1
+            self.badgeLabel.text = badge*/
+        }
+    }
+    
+    private func animateBadge(index: Int) {
+        guard let badge = self.viewControllers[index].tabBarItem.badgeValue,
+              badge.count > 0 else {
+            self.badgeLabel.text = ""
+            self.badgeLabel.alpha = 0
+            return
+        }
+        UIView.animate(withDuration: 2 * SOTabBarSetting.tabBarAnimationDurationTime) { [weak self] in
+            self?.badgeLabel.alpha = 1
+            self?.badgeLabel.text = badge
         }
     }
     
@@ -208,4 +259,31 @@ private extension SOTabBar {
         return path.cgPath
     }
     
+}
+
+@available(iOS 10.0, *)
+extension SOTabBar {
+    open func updateBadge(index: Int, value: String?) {
+        if self.dataSource?.isRTL() ?? false {
+            let rtlIndex = (viewControllers.count - 1) - index
+            
+            self.viewControllers[rtlIndex].tabBarItem.badgeValue = value
+            guard let badge = self.viewControllers[rtlIndex].tabBarItem.badgeValue,
+                  badge.count > 0 else {
+                self.badgeLabel.text = ""
+                self.badgeLabel.alpha = 0
+                return
+            }
+        } else {
+            self.viewControllers[index].tabBarItem.badgeValue = value
+            guard let badge = self.viewControllers[index].tabBarItem.badgeValue,
+                  badge.count > 0 else {
+                self.badgeLabel.text = ""
+                self.badgeLabel.alpha = 0
+                return
+            }
+        }
+        
+        (self.stackView.viewWithTag(index + 1) as? SOTabBarItem)?.badge = value
+    }
 }

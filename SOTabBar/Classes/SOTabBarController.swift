@@ -32,7 +32,7 @@ open class SOTabBarController: UIViewController, SOTabBarDelegate {
         }
     }
     
-    private lazy var tabBar: SOTabBar = {
+    public lazy var tabBar: SOTabBar = {
         let tabBar = SOTabBar()
         tabBar.delegate = self
         tabBar.dataSource = self

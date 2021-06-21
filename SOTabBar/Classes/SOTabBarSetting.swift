@@ -18,5 +18,6 @@ public struct SOTabBarSetting {
     public static var tabBarShadowColor = UIColor.lightGray.cgColor
     public static var tabBarSizeSelectedImage: CGFloat = 20
     public static var tabBarAnimationDurationTime: Double = 0.4
+    public static var tabBarBadgeSize: CGFloat = 20.0
     
 }

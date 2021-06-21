@@ -20,7 +20,7 @@ class SOTabBarItem: UIView {
         }
     }
     
-    private lazy var badgeLabel: UILabel = {
+    lazy var badgeLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.systemFont(ofSize: 11, weight: .bold)
         lbl.textColor = SOTabBarSetting.tabBarTintColor

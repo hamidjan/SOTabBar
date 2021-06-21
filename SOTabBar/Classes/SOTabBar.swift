@@ -260,7 +260,7 @@ extension SOTabBar {
         self.badgeLabel.alpha = 0
         self.badgeLabel.text = ""
         if self.dataSource?.isRTL() ?? false {
-            let rtlIndex = (viewControllers.count - 1) - selectedIndex
+            let rtlIndex = viewControllers.count - selectedIndex
             if rtlIndex == index {
                 self.badgeLabel.alpha = 1
                 self.badgeLabel.text = badge

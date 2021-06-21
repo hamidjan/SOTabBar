@@ -266,7 +266,7 @@ extension SOTabBar {
                 self.badgeLabel.text = badge
             }
         } else {
-            if index == selectedIndex {
+            if index == selectedIndex - 1 {
                 self.badgeLabel.alpha = 1
                 self.badgeLabel.text = badge
             }

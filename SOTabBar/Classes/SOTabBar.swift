@@ -253,9 +253,12 @@ extension SOTabBar {
               badge.count > 0 else {
             self.badgeLabel.text = ""
             self.badgeLabel.alpha = 0
+            (self.stackView.viewWithTag(index + 1) as? SOTabBarItem)?.badge = ""
             return
         }
         
+        self.badgeLabel.alpha = 1
+        self.badgeLabel.text = badge
         (self.stackView.viewWithTag(index + 1) as? SOTabBarItem)?.badge = value
     }
 }

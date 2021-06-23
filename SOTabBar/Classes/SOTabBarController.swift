@@ -10,7 +10,7 @@ import UIKit
 @available(iOS 10.0, *)
 public protocol SOTabBarControllerDelegate: NSObjectProtocol {
     func tabBarController(_ tabBarController: SOTabBarController, didSelect viewController: UIViewController)
-    func sameIndexSelected(_ tabBarController: SOTabBarController)
+    func sameIndexSelected(_ tabBarController: SOTabBarController, viewController: UIViewController)
 }
 
 public protocol SOTabBarControllerDataSource: NSObjectProtocol {
@@ -101,8 +101,9 @@ open class SOTabBarController: UIViewController, SOTabBarDelegate {
         
     }
     
-    func sameIndexSelected(_ tabBar: SOTabBar) {
-        delegate?.sameIndexSelected(self)
+    func sameIndexSelected(_ tabBar: SOTabBar, index: Int) {
+        let vc = viewControllers[index]
+        delegate?.sameIndexSelected(self, viewController: vc)
     }
 }
 

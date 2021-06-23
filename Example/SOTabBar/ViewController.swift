@@ -51,7 +51,7 @@ extension ViewController: SOTabBarControllerDelegate {
         print(viewController.tabBarItem.title ?? "")
     }
     
-    func sameIndexSelected(_ tabBarController: SOTabBarController) {
+    func sameIndexSelected(_ tabBarController: SOTabBarController, viewController: UIViewController) {
         print("same index selected")
     }
 }

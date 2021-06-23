@@ -12,7 +12,7 @@ import UIKit
 @available(iOS 10.0, *)
 protocol SOTabBarDelegate: AnyObject {
     func tabBar(_ tabBar: SOTabBar, didSelectTabAt index: Int)
-    func sameIndexSelected(_ tabBar: SOTabBar)
+    func sameIndexSelected(_ tabBar: SOTabBar, index: Int)
 }
 
 protocol SOTabBarDataSource: NSObjectProtocol {
@@ -162,7 +162,13 @@ open class SOTabBar: UIView {
     
     private func didSelectTab(index: Int) {
         if index + 1 == selectedIndex {
-            delegate?.sameIndexSelected(self)
+            if self.dataSource?.isRTL() ?? false {
+                let rtlIndex = (viewControllers.count - 1) - index
+                delegate?.sameIndexSelected(self, index: rtlIndex)
+            } else {
+                delegate?.sameIndexSelected(self, index: index)
+            }
+            
             return
         }
  

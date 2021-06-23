@@ -11,7 +11,8 @@ import UIKit
 // use this protocol to detect when a tab bar item is pressed
 @available(iOS 10.0, *)
 protocol SOTabBarDelegate: AnyObject {
-     func tabBar(_ tabBar: SOTabBar, didSelectTabAt index: Int)
+    func tabBar(_ tabBar: SOTabBar, didSelectTabAt index: Int)
+    func sameIndexSelected(_ tabBar: SOTabBar)
 }
 
 protocol SOTabBarDataSource: NSObjectProtocol {
@@ -160,7 +161,10 @@ open class SOTabBar: UIView {
     }
     
     private func didSelectTab(index: Int) {
-        if index + 1 == selectedIndex {return}
+        if index + 1 == selectedIndex {
+            delegate?.sameIndexSelected(self)
+            return
+        }
  
         previousSelectedIndex = selectedIndex
         selectedIndex  = index + 1

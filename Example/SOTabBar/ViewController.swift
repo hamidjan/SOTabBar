@@ -50,6 +50,10 @@ extension ViewController: SOTabBarControllerDelegate {
     func tabBarController(_ tabBarController: SOTabBarController, didSelect viewController: UIViewController) {
         print(viewController.tabBarItem.title ?? "")
     }
+    
+    func sameIndexSelected(_ tabBarController: SOTabBarController) {
+        print("same index selected")
+    }
 }
 
 extension ViewController: SOTabBarControllerDataSource {

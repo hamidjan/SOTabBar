@@ -10,6 +10,7 @@ import UIKit
 @available(iOS 10.0, *)
 public protocol SOTabBarControllerDelegate: NSObjectProtocol {
     func tabBarController(_ tabBarController: SOTabBarController, didSelect viewController: UIViewController)
+    func sameIndexSelected(_ tabBarController: SOTabBarController)
 }
 
 public protocol SOTabBarControllerDataSource: NSObjectProtocol {
@@ -100,6 +101,9 @@ open class SOTabBarController: UIViewController, SOTabBarDelegate {
         
     }
     
+    func sameIndexSelected(_ tabBar: SOTabBar) {
+        delegate?.sameIndexSelected(self)
+    }
 }
 
 @available(iOS 10.0, *)
